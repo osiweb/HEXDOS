@@ -167,46 +167,34 @@ TRKNUM=*+6 ;TRACK CURRENTLY IN BUFFER
        JSR MOVE ; Pick up the Basic cold start code, then modify and run
        .WORD $BD15,DBADDR-1
        .BYTE $C2-$16
-       .BYTE $23-$16,GETVAL ; Low byte
-       .BYTE $25-$16
-              .DBYTE GETVAL ; High byte
-       *=*-1
-       .BYTE $3D-$16,USR    ; Low byte
-       .BYTE $3F-$16
-              .DBYTE USR    ; High byte
-       *=*-1
+       .BYTE $23-$16,<GETVAL ; Low byte
+       .BYTE $25-$16,>GETVAL ; High byte
+       .BYTE $3D-$16,<USR    ; Low byte
+       .BYTE $3F-$16,>USR    ; High byte
        .BYTE $8C-$16,$0C
 ; Set up jump back to INTER after running first part of cold start
        .BYTE $C2-$16,$4C
-       .BYTE $C3-$16,INTER
-       .BYTE $C4-$16
-              .DBYTE INTER
-       *=*-1
+       .BYTE $C3-$16,<INTER
+       .BYTE $C4-$16,>INTER
        .BYTE $FF
        JSR DBADDR
 INTER                    ; Second half of cold start
        JSR MOVE
        .WORD $BDC1,DBADDR-1
        .BYTE $139-$C2
-       .BYTE $1F5-$C2,$0C
-       .BYTE $124-$C2,PROMPT ; Low byte
-       .BYTE $126-$C2
-              .DBYTE PROMPT  ; High byte
-       *=*-1
-       .BYTE $12F-$C2,WARM   ; Low byte
-       .BYTE $131-$C2
-               .DBYTE WARM   ; High byte
-       *=*-1
+       .BYTE $F5-$C2,$0C
+       .BYTE $124-$C2,<PROMPT ; Low byte
+       .BYTE $126-$C2,>PROMPT  ; High byte
+       .BYTE $12F-$C2,<WARM   ; Low byte
+       .BYTE $131-$C2,>WARM   ; High byte
 ; Set up jump to warm start entry point after running second half
        .BYTE $136-$C2,$4C
-       .BYTE $137-$C2,WARM-4
-       .BYTE $138-$C2
-               .DBYTE WARM-4
-       *=*-1
+       .BYTE $137-$C2,<WM4
+       .BYTE $138-$C2,>WM4
        .BYTE $FF
        JSR DBADDR
 ; Set up Basic's workspace pointers (back up one page)
-       DEC $7A
+WM4:   DEC $7A
        DEC $C4
 WARM   JSR MOVE          ; Warm start entry, pointed to by JMP at $0000
 ; Reset disk controller
@@ -234,10 +222,8 @@ WARM   JSR MOVE          ; Warm start entry, pointed to by JMP at $0000
        .WORD PZERO-1,$DF
        .BYTE $EF-$E0
        .BYTE $130-$E0,$4C
-       .BYTE $131-$E0,SECOND
-       .BYTE $132-$E0
-              .DBYTE SECOND
-       *=*-1
+       .BYTE $131-$E0,<SECOND
+       .BYTE $132-$E0,>SECOND
        .BYTE $FF
 ;ENABLE CLOCK
        LDA #$C
